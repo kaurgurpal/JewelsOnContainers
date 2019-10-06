@@ -17,7 +17,7 @@ namespace WebMVC.Services
         private readonly string _baseUri;
         public CatalogService(IConfiguration config, IHttpClient client)
         {
-            _baseUri = $"{config["CatalogUrl"]}/api/catalog";
+            _baseUri = $"{config["CatalogUrl"]}/api/catalog/";
             _client = client;
         }
         public async Task<IEnumerable<SelectListItem>> GetBrandsAsync()
@@ -58,9 +58,32 @@ namespace WebMVC.Services
             return response;
         }
 
-        public Task<IEnumerable<SelectListItem>> GetTypesAsync()
+        public async Task<IEnumerable<SelectListItem>> GetTypesAsync()
         {
-            throw new NotImplementedException();
+            var typeUri = ApiPaths.Catalog.GetAllTypes(_baseUri);
+            var dataString = await _client.GetStringAsync(typeUri);
+            var items = new List<SelectListItem>
+            {
+                new SelectListItem
+                {
+                    Value=null,
+                    Text="All",
+                    Selected=true
+                }
+            };
+
+            var types = JArray.Parse(dataString);
+            foreach (var type in types)
+            {
+                items.Add(
+                    new SelectListItem
+                    {
+                        Value = type.Value<string>("id"),
+                        Text = type.Value<string>("type")
+                    }
+                    );
+            }
+            return items;
         }
     }
 }

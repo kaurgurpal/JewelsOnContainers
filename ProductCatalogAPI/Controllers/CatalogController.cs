@@ -56,7 +56,7 @@ namespace ProductCatalogAPI.Controllers
                 Count = itemsCount,
                 Data = items
             };
-            return Ok(items);
+            return Ok(model);
         }
 
         [HttpGet]
@@ -83,7 +83,7 @@ namespace ProductCatalogAPI.Controllers
                 Data = items
             };
 
-            return Ok(items);
+            return Ok(model);
         }
 
         private List<CatalogItem> ChangePictureUrl(List<CatalogItem> items)

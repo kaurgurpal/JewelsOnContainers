@@ -33,7 +33,7 @@ namespace ProductCatalogAPI
             var password = Configuration["DatabasePassword"];
             var connectionString = $"Server={server};Database={database};User ID={user};Password={password}";
             services.AddDbContext<CatalogContext>(options => options.UseSqlServer(connectionString));
-
+            //services.AddDbContext<CatalogContext>(options => options.UseSqlServer(Configuration["ConnectionString"]));
             services.AddSwaggerGen(options => 
             {
                 options.DescribeAllEnumsAsStrings();
