@@ -13,6 +13,11 @@ namespace WebMVC.Controllers
         private readonly ICatalogService _service;
         public CatalogController(ICatalogService service) => _service = service;
 
+        public async Task<IActionResult> About()
+        {
+            return View();
+        }
+
         public async Task<IActionResult> Index(int? brandFilterApplied,
             int? typesFilterApplied, int? page)
         {

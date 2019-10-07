@@ -14,7 +14,7 @@ services:
       DatabaseServer: mssqlserver
       DatabaseName: CatalogDb
       DatabaseUser: sa
-      DatabasePassword: Password@123
+      DatabasePassword: ProductApi(!)
       ExternalCatalogBaseUrl: http://localhost:6080
     ports:
       - "6080:80"
@@ -24,7 +24,24 @@ services:
       - frontend
     depends_on:
       - mssqlserver
-
+ 
+  tokenserver:
+    build:
+      context: .\TokenServiceApi
+      dockerfile: Dockerfile
+    image: jewels/tokenapi
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      MvcClient: http://localhost:5208
+    ports:
+      - "6070:80"
+    container_name: tokenserviceapi
+    networks:
+      - backend
+      - frontend
+    depends_on:
+      - mssqlserver
+  
   webmvc:
     build:
       context: .\webmvc
@@ -34,18 +51,21 @@ services:
     environment:
       CatalogUrl: http://catalog
       ASPNETCORE_ENVIRONMENT: Development
+      IdentityUrl: http://192.168.0.16:6070
+      CallBackUrl: http://localhost:5208
     ports:
       - "5208:80"
     networks:
       - frontend
     depends_on:
       - catalog
+      - tokenserver
 
   mssqlserver:
     image: "microsoft/mssql-server-linux:latest"
     environment:
       ACCEPT_EULA: Y
-      SA_PASSWORD: Password@123
+      SA_PASSWORD: ProductApi(!)
     container_name: jewelssqlserver
     ports:
       - "1448:1433"
