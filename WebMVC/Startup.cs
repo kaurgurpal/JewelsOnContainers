@@ -39,6 +39,9 @@ namespace WebMVC
             services.AddSingleton<IHttpClient, CustomHttpClient>();
             services.AddTransient<ICatalogService, CatalogService>();
             services.AddTransient<IIdentityService<ApplicationUser>, IdentityService>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddTransient<ICartService, CartService>();
+            //services.AddTransient<IOrderService, OrderService>();
 
             var identityUrl = Configuration.GetValue<string>("IdentityUrl");
             var callBackUrl = Configuration.GetValue<string>("CallBackUrl");
@@ -70,7 +73,6 @@ namespace WebMVC
                     NameClaimType = "name",
                     RoleClaimType = "role"
                 };
-
             });
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
